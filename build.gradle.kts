@@ -149,7 +149,7 @@ tasks.withType<Jar> {
         println( "Deflating Jar File" )
 
         try {
-            val deflateCommand = "kotlin $buildPath/libs/$jarName $buildPath/libs/$jarName"
+            val deflateCommand = "kotlin $buildPath/libs/$jarName $buildPath/libs/$jarName --skip kotlin.Metadata"
             ProcessBuilder( deflateCommand.split( " " ) )
                 .directory( File( "$buildPath/libs/" ) )
                 .redirectOutput(ProcessBuilder.Redirect.INHERIT)

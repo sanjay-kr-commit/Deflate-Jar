@@ -7,7 +7,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
-fun deflate( pathToJar : String ) {
+fun deflate( pathToJar : String , ignoreList : List<String> ) {
     println( "Trying To Deflate $pathToJar" )
     if ( !pathToJar.toFile.isFile ) {
         println( "Jar Not Found : $pathToJar" )
@@ -33,7 +33,9 @@ fun deflate( pathToJar : String ) {
     println( "Number Of Class : ${classList.size}" )
     val allowedClass = ArrayList<String>()
     ZipFile( pathToJar ).use { jar ->
-        jar.dependencyList( mainFileName , allowedClass , classList )
+        jar.dependencyList( mainFileName , allowedClass , classList ,
+            ignoreList as ArrayList
+        )
         println()
         println( "Class In Use : ${allowedClass.size}" )
         println( "Class Not In Use : ${classList.size - allowedClass.size}" )
