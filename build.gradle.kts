@@ -4,6 +4,7 @@ import java.io.FileOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
+import java.util.concurrent.TimeUnit
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
@@ -144,6 +145,21 @@ tasks.withType<Jar> {
         File( "$buildPath/libs/${jarName}Dir" ).deleteRecursively()
 
         println( "Success : Added Runtime Files to Jar" )
+
+        println( "Deflating Jar File" )
+
+        try {
+            val deflateCommand = "kotlin $buildPath/libs/$jarName $buildPath/libs/$jarName"
+            ProcessBuilder( deflateCommand.split( " " ) )
+                .directory( File( "$buildPath/libs/" ) )
+                .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start()
+                .waitFor(60, TimeUnit.MINUTES)
+            println( "Deflated Jar" )
+        } catch ( e : Exception ) {
+            println( "Failed To Defalte Jar $e" )
+        }
 
     }
 
